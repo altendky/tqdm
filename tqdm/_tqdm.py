@@ -823,8 +823,15 @@ class tqdm(Comparable):
         if write_bytes:
             # Despite coercing unicode into bytes, py2 sys.std* streams
             # should have bytes written to them.
+            encoding = getattr(file, 'encoding', None)
+
+            if encoding is None:
+                encoding = 'utf-8'
+
             file = SimpleTextIOWrapper(
-                file, encoding=getattr(file, 'encoding', 'utf-8'))
+                file,
+                encoding=encoding,
+            )
 
         if disable is None and hasattr(file, "isatty") and not file.isatty():
             disable = True
